@@ -1,0 +1,7 @@
+person:
+ - name: string
+ - has_many: [zombies]
+
+zombie:
+ - type: string
+ - belongs_to: [person]

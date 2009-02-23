@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" label="Zombie"
+  xmlns:rx="org.restfulx.components.rx.*">
+  <mx:Script><![CDATA[
+    import org.restfulx.Rx;
+    import org.restfulx.utils.RxUtils;
+    import zombies.models.Zombie;
+    import zombies.models.Person;
+
+    [Bindable]
+    private var _zombie:Zombie = new Zombie();
+
+    private function newZombie():void {
+      _zombie = new Zombie();
+      zombiesList.selectedIndex = -1;
+    }
+
+    private function saveZombie():void {
+      if (_zombie.id) {
+        updateZombie();
+      } else {
+        createZombie();
+      }
+    }
+  
+    private function createZombie():void {
+      var zombie:Zombie = new Zombie();
+      zombie.type = typeTextInput.text;
+
+      zombie.person = Person(personComboBox.selectedItem);
+      zombie.create({onSuccess: onZombieCreate});
+    }
+
+    private function updateZombie():void {
+      _zombie.type = typeTextInput.text;
+
+      _zombie.person = Person(personComboBox.selectedItem);
+      _zombie.update({onSuccess: onZombieUpdate});
+    }
+
+    private function destroyZombie():void {
+      _zombie.destroy({onSuccess: onZombieDestroy});
+    }
+  
+    private function onZombieSelect():void {
+      _zombie = RxUtils.clone(zombiesList.selectedItem) as Zombie;
+    }
+  
+    private function onZombieCreate(zombie:Zombie):void {
+      _zombie = new Zombie;
+    }
+  
+    private function onZombieUpdate(zombie:Zombie):void {
+      zombiesList.selectedItem = zombie;
+      _zombie = RxUtils.clone(zombie) as Zombie;
+    }
+  
+    private function onZombieDestroy(zombie:Zombie):void {
+      onZombieCreate(zombie);
+    }
+
+    private function canDeleteZombie(zombie:Zombie):Boolean {
+      return zombie != null && !RxUtils.isEmpty(zombie.id);
+    }
+  ]]></mx:Script>
+  <mx:Panel id="zombiesPanel"
+    title="Zombies" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid" 
+    borderThickness="1" backgroundColor="#EEEEEE" width="25%" height="100%">
+    <mx:List id="zombiesList"
+      width="100%" height="100%"
+      dataProvider="{Rx.models.index(Zombie)}"
+      change="onZombieSelect()"/>
+    <mx:ControlBar width="100%">
+      <mx:Button label="New Zombie" width="100%" height="30"
+        click="newZombie()"/>
+    </mx:ControlBar>
+  </mx:Panel>
+  <mx:Panel title="Edit Zombie" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid" 
+    borderThickness="1" backgroundColor="#EEEEEE" width="75%" height="100%">
+    <mx:Form width="100%" height="100%">
+      <mx:FormItem label="Type" width="100%">
+        <mx:TextInput id="typeTextInput" width="100%" text="{_zombie.type}"/>
+      </mx:FormItem>
+      <mx:FormItem label="Person" width="100%">
+        <mx:ComboBox id="personComboBox" width="200"
+          labelField="{Person.LABEL}"
+          dataProvider="{Rx.models.index(Person)}" prompt="Person ..."
+          selectedItem="{_zombie.person}" />
+      </mx:FormItem>
+    </mx:Form>
+    <mx:ControlBar width="100%">
+      <mx:Button label="Save Zombie" width="50%" height="30"
+        click="saveZombie()"/>
+      <mx:Button label="Delete Zombie" width="50%" height="30"
+        enabled="{canDeleteZombie(_zombie)}"
+        click="destroyZombie()"/>
+    </mx:ControlBar>
+  </mx:Panel>
+</mx:HBox>

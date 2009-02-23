@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
+  xmlns:generated="zombies.components.generated.*"
+  paddingBottom="8" paddingLeft="8" paddingRight="8" paddingTop="8"
+  layout="horizontal" styleName="plain" initialize="init()">
+  <mx:Script>
+    <![CDATA[
+      import org.restfulx.services.air.AIRServiceProvider;
+      import zombies.controllers.ApplicationController;
+
+      private function init():void {
+        ApplicationController.initialize([AIRServiceProvider], AIRServiceProvider.ID, "zombies");
+      }
+    ]]>
+  </mx:Script>
+  <mx:LinkBar dataProvider="{mainViewStack}" direction="vertical" borderStyle="solid" backgroundColor="#EEEEEE"/>
+  <mx:ViewStack id="mainViewStack" width="100%" height="100%">
+    <!-- For a simple demo, put all the components here. -->
+    <generated:PersonBox/>
+    <generated:ZombieBox/>
+  </mx:ViewStack>
+</mx:WindowedApplication>
+
