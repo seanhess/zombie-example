@@ -27,14 +27,14 @@
       var zombie:Zombie = new Zombie();
       zombie.type = typeTextInput.text;
 
-      zombie.person = Person(personComboBox.selectedItem);
+      zombie.killer = Person(personComboBox.selectedItem);
       zombie.create({onSuccess: onZombieCreate});
     }
 
     private function updateZombie():void {
       _zombie.type = typeTextInput.text;
 
-      _zombie.person = Person(personComboBox.selectedItem);
+      _zombie.killer = Person(personComboBox.selectedItem);
       _zombie.update({onSuccess: onZombieUpdate});
     }
 
@@ -84,8 +84,8 @@
       <mx:FormItem label="Person" width="100%">
         <mx:ComboBox id="personComboBox" width="200"
           labelField="{Person.LABEL}"
-          dataProvider="{Rx.models.index(Person)}" prompt="Person ..."
-          selectedItem="{_zombie.person}" />
+          dataProvider="{Rx.models.index(Person)}" prompt="Killer ..."
+          selectedItem="{_zombie.killer}" />
       </mx:FormItem>
     </mx:Form>
     <mx:ControlBar width="100%">

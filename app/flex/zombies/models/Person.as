@@ -9,8 +9,8 @@ package zombies.models {
 
     public var name:String = "";
 
-    [HasMany]
-    public var zombies:ModelsCollection;
+    [HasMany(type="Zombie")]
+    public var kills:ModelsCollection;
     
     public function Person() {
       super(LABEL);

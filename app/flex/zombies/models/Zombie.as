@@ -8,8 +8,8 @@ package zombies.models {
 
     public var type:String = "";
 
-    [BelongsTo]
-    public var person:Person;
+    [BelongsTo(referAs="kills")]
+    public var killer:Person;
 
     public function Zombie() {
       super(LABEL);

@@ -9,7 +9,7 @@
       import zombies.controllers.ApplicationController;
 
       private function init():void {
-        ApplicationController.initialize([AIRServiceProvider], AIRServiceProvider.ID, "zombies");
+        ApplicationController.initialize([AIRServiceProvider], AIRServiceProvider.ID, "zombies-other-way");
       }
     ]]>
   </mx:Script>

@@ -79,7 +79,7 @@
         <mx:TextInput id="nameTextInput" width="100%" text="{_person.name}"/>
       </mx:FormItem>
 		<mx:FormItem label="Kills" width="100%">
-	        <mx:List id="zombieList" width="100%" dataProvider="{_person.zombies}"/>
+	        <mx:List id="zombieList" width="100%" dataProvider="{_person.kills}"/>
 	      </mx:FormItem>
     </mx:Form>
     <mx:ControlBar width="100%">
