@@ -2,6 +2,7 @@
 <mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" label="Person"
   xmlns:rx="org.restfulx.components.rx.*">
   <mx:Script><![CDATA[
+  	import org.restfulx.collections.ModelsCollection;
     import org.restfulx.Rx;
     import org.restfulx.utils.RxUtils;
     import zombies.models.Person;
@@ -11,7 +12,7 @@
 
     private function newPerson():void {
       _person = new Person();
-      peopleList.selectedIndex = -1;
+//      peopleList.selectedIndex = -1;
     }
 
     private function savePerson():void {
@@ -40,7 +41,7 @@
     }
   
     private function onPersonSelect():void {
-      _person = RxUtils.clone(peopleList.selectedItem) as Person;
+//      _person = RxUtils.clone(peopleList.selectedItem) as Person;
     }
   
     private function onPersonCreate(person:Person):void {
@@ -48,7 +49,7 @@
     }
   
     private function onPersonUpdate(person:Person):void {
-      peopleList.selectedItem = person;
+//      peopleList.selectedItem = person;
       _person = RxUtils.clone(person) as Person;
     }
   
@@ -59,18 +60,35 @@
     private function canDeletePerson(person:Person):Boolean {
       return person != null && !RxUtils.isEmpty(person.id);
     }
+    
+    private function loadPerson():void
+    {
+    	var people:ModelsCollection = Rx.models.index(Person, {metadata: { name: "Bob" }, onSuccess:personLoaded, onFailure:onFault});
+    	
+    	var henry:Boolean = true;
+    }
+    
+    private function personLoaded(result:*):void
+    {
+    	var bob:Boolean = true;
+    }
+    
+    private function onFault(fault:*):void
+    {
+    	throw new Error("Fault " + fault);	
+    }
   ]]></mx:Script>
   <mx:Panel id="peoplePanel"
     title="People" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid" 
     borderThickness="1" backgroundColor="#EEEEEE" width="25%" height="100%">
-    <mx:List id="peopleList"
+    <!--<mx:List id="peopleList"
       width="100%" height="100%"
       dataProvider="{Rx.models.index(Person)}"
       change="onPersonSelect()"/>
     <mx:ControlBar width="100%">
       <mx:Button label="New Person" width="100%" height="30"
         click="newPerson()"/>
-    </mx:ControlBar>
+    </mx:ControlBar>-->
   </mx:Panel>
   <mx:Panel title="Edit Person" cornerRadius="0" dropShadowEnabled="false" borderStyle="solid" 
     borderThickness="1" backgroundColor="#EEEEEE" width="75%" height="100%">
@@ -88,6 +106,7 @@
       <mx:Button label="Delete Person" width="50%" height="30"
         enabled="{canDeletePerson(_person)}"
         click="destroyPerson()"/>
+      <mx:Button label="Load Person" click="loadPerson()"/>
     </mx:ControlBar>
   </mx:Panel>
 </mx:HBox>

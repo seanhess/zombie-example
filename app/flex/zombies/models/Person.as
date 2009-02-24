@@ -1,4 +1,6 @@
 package zombies.models {
+  import mx.utils.ObjectUtil;
+  
   import org.restfulx.collections.ModelsCollection;
   import org.restfulx.models.RxModel;
   
@@ -14,6 +16,11 @@ package zombies.models {
     
     public function Person() {
       super(LABEL);
+    }
+    
+    override public function toString():String
+    {
+    	return ObjectUtil.toString(this);
     }
   }
 }

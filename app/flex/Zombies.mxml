@@ -2,22 +2,89 @@
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
   xmlns:generated="zombies.components.generated.*"
   paddingBottom="8" paddingLeft="8" paddingRight="8" paddingTop="8"
-  layout="horizontal" styleName="plain" initialize="init()">
+  layout="horizontal" styleName="plain">
   <mx:Script>
     <![CDATA[
+    	import mx.controls.Alert;
+    	import mx.utils.ObjectUtil;
+    	import org.restfulx.Rx;
+    	import org.restfulx.collections.ModelsCollection;
+    	import zombies.models.Zombie;
+    	import zombies.models.Person;
       import org.restfulx.services.air.AIRServiceProvider;
       import zombies.controllers.ApplicationController;
 
-      private function init():void {
+      private function init():void {     
+       
+
         ApplicationController.initialize([AIRServiceProvider], AIRServiceProvider.ID, "zombies-other-way");
+        
+        Alert.show("Initialized");
+      }
+      
+      private function drop():void {
+      	 var file:File = File.userDirectory.resolvePath("zombies-other-way.db");
+        
+    	if (file.exists)
+    		file.deleteFile();
+    		
+    	Alert.show("Dropped");
+      }
+      
+      private function addAPerson():void {
+      	var person:Person = new Person();
+      		person.name = "Killer Bob!";
+      		
+      	var zombie:Zombie = new Zombie();
+      		zombie.type = "Newly Dead";
+      		zombie.killer = person;
+      		
+      	var otherZombie:Zombie = new Zombie();
+      		otherZombie.type = "Old and Stinky";
+      		otherZombie.killer = person;
+      		
+      	person.create(onSuccess, onFault);
+
+  		zombie.create(onSuccess, onFault);
+  		otherZombie.create(onSuccess, onFault);
+      		
+      }
+      
+      private function findBob():void {
+      	var people:ModelsCollection = Rx.models.index(Person, { metadata: { "name": "Killer Bob!" }, onSuccess:onSuccess, onFailure:onFault, fetchDependencies: true, useLazyMode: false});
+      	Alert.show("findBob ::: " + people);
+      }
+      
+      private function onSuccess(result:*):void 
+      {
+      	Alert.show("onSuccess :::: " + result);
+      }
+      
+      private function findAllPeople():void {
+      	var people:ModelsCollection = Rx.models.index(Person, onSuccess, onFault);
+      	Alert.show("findAllPeople ::: " + people);
+      }
+      
+      private function findAllZombies():void {
+      	var zombies:ModelsCollection = Rx.models.index(Zombie, onSuccess, onFault);
+      	Alert.show("findAllZombies ::: " + zombies);
+      }
+      
+      private function onFault(fault:*):void {
+      	throw new Error("Fault " + fault);
       }
     ]]>
   </mx:Script>
-  <mx:LinkBar dataProvider="{mainViewStack}" direction="vertical" borderStyle="solid" backgroundColor="#EEEEEE"/>
-  <mx:ViewStack id="mainViewStack" width="100%" height="100%">
-    <!-- For a simple demo, put all the components here. -->
-    <generated:PersonBox/>
-    <generated:ZombieBox/>
-  </mx:ViewStack>
+  <mx:VBox width="100%" height="100%">
+  	<mx:HBox>
+	  <mx:Button label="initialize database" click="init()"/>
+	  <mx:Button label="drop database" click="drop()"/>
+	  <mx:Button label="Add Person" click="addAPerson()"/>
+	  <mx:Button label="Find Bob" click="findBob()"/>
+	  <mx:Button label="Find All People" click="findAllPeople()"/>
+	  <mx:Button label="Find All Zombies" click="findAllZombies()"/>
+  	</mx:HBox>
+  	<mx:List id="list" width="100%" height="100%" dataProvider="{Rx.models.index(Person)}"/>
+  </mx:VBox>
 </mx:WindowedApplication>
 
