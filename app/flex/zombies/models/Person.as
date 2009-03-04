@@ -5,15 +5,14 @@ package zombies.models {
   [Resource(name="people")]
   [Bindable]
   public class Person extends RxModel {
-    public static const LABEL:String = "name";
-
     public var name:String = "";
 
     [HasMany]
     public var zombies:ModelsCollection;
-    
-    public function Person() {
-      super(LABEL);
-    }
+	
+	override public function toString():String
+	{
+		return "Person: " + name + " has killed " + zombies;
+	}    
   }
 }

@@ -4,15 +4,15 @@ package zombies.models {
   [Resource(name="zombies")]
   [Bindable]
   public class Zombie extends RxModel {
-    public static const LABEL:String = "type";
-
     public var type:String = "";
 
     [BelongsTo]
     public var person:Person;
 
-    public function Zombie() {
-      super(LABEL);
+    override public function toString():String
+    {
+    	return "Z: " + type;
     }
+    
   }
 }

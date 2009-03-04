@@ -2,22 +2,76 @@
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
   xmlns:generated="zombies.components.generated.*"
   paddingBottom="8" paddingLeft="8" paddingRight="8" paddingTop="8"
-  layout="horizontal" styleName="plain" initialize="init()">
+  layout="horizontal" styleName="plain">
   <mx:Script>
     <![CDATA[
+    	import mx.controls.Alert;
+    	import mx.utils.ObjectUtil;
+    	import org.restfulx.Rx;
+    	import org.restfulx.collections.ModelsCollection;
+    	import zombies.models.Zombie;
+    	import zombies.models.Person;
       import org.restfulx.services.air.AIRServiceProvider;
       import zombies.controllers.ApplicationController;
+      
+      protected var bob:Person;
 
-      private function init():void {
+      private function init():void {     
+       
+
         ApplicationController.initialize([AIRServiceProvider], AIRServiceProvider.ID, "zombies");
+        
+        Alert.show("Initialized");
+      }
+      
+      private function drop():void {
+      	 var file:File = File.userDirectory.resolvePath("zombies.db");
+        
+    	if (file.exists)
+    		file.deleteFile();
+    		
+    	Alert.show("Dropped");
+      }
+      
+      private function index():void 
+      {
+      	Rx.models.index(Zombie);
+      	Rx.models.index(Person);
+      	
+      	Alert.show("Indexed");
+      }
+      
+      private function addAPerson():void {
+      	var bob:Person = new Person();
+      		bob.name = "Killer Bob!";
+      		
+      	this.bob = bob;
+      		
+      	bob.create();
+      		
+  		var ugly:Zombie = new Zombie();
+  			ugly.type = "ugly";
+  			ugly.person = bob;
+  			
+		ugly.create();
+  			
+  		Alert.show("Added");
+      }
+      
+      private function findAllPeople():void {
+      	var people:ModelsCollection = Rx.models.index(Person);
+      	
+      	Alert.show("People : " + people);
+      	Alert.show("Original Bob : " + bob);
       }
     ]]>
   </mx:Script>
-  <mx:LinkBar dataProvider="{mainViewStack}" direction="vertical" borderStyle="solid" backgroundColor="#EEEEEE"/>
-  <mx:ViewStack id="mainViewStack" width="100%" height="100%">
-    <!-- For a simple demo, put all the components here. -->
-    <generated:PersonBox/>
-    <generated:ZombieBox/>
-  </mx:ViewStack>
+  <mx:VBox width="100%" height="100%">
+	  <mx:Button label="initialize database" click="init()"/>
+	  <mx:Button label="drop database" click="drop()"/>
+	  <mx:Button label="preindex" click="index()"/>
+	  <mx:Button label="Add Stuff" click="addAPerson()"/>
+	  <mx:Button label="Find People" click="findAllPeople()"/>
+  </mx:VBox>
 </mx:WindowedApplication>
 
